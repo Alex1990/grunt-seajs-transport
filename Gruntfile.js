@@ -28,23 +28,22 @@ module.exports = function(grunt) {
       tests: ['tmp']
     },
 
+    'node-inspector': {
+      dev: {}
+    },
+
     // Configuration to be run (and then tested).
     seajs_transport: {
-      default_options: {
+      basic: {
         options: {
+          quoteChar: "'"
         },
-        files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']
-        }
-      },
-      custom_options: {
-        options: {
-          separator: ': ',
-          punctuation: ' !!!'
-        },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
-        }
+        files: [{
+          expand: true,
+          cwd: 'test/cases/basic',
+          src: '**/*.js',
+          dest: 'test/dest/basic'
+        }]
       }
     },
 
@@ -61,6 +60,7 @@ module.exports = function(grunt) {
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-debug-task');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this

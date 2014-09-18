@@ -1,5 +1,7 @@
 'use strict';
 
+var fs = require('fs');
+var path = require('path');
 var grunt = require('grunt');
 
 /*
@@ -22,27 +24,46 @@ var grunt = require('grunt');
     test.ifError(value)
 */
 
+function readDirs(dir) {
+  var result = [];
+
+  fs.readdirSync(dir)
+    .forEach(function(file) {
+      var sub = path.join(dir, file);
+      if (fs.statSync(sub).isDirectory()) {
+        result = result.concat(readDirs(sub).map(function(subFile) {
+          return path.join(file, subFile);
+        }));
+      } else {
+        result.push(file);
+      }
+    });
+
+  return result;
+}
+
 exports.seajs_transport = {
-  setUp: function(done) {
-    // setup here if necessary
-    done();
-  },
-  default_options: function(test) {
+  test_options: function(test) {
     test.expect(1);
 
-    var actual = grunt.file.read('tmp/default_options');
-    var expected = grunt.file.read('test/expected/default_options');
-    test.equal(actual, expected, 'should describe what the default behavior is.');
+    var base = path.resolve('test/cases');
+    var dest = path.resolve('test/dest');
+    var dirs = fs.readdirSync(base);
+    dirs.forEach(function(dir) {
+      var files = readDirs(path.join(base, dir));
+
+      if (files.length) {
+        files.filter(function(file) {
+          return !/\.expected$/.test(file);
+        }).forEach(function(file) {
+          var expected = grunt.file.read(path.join(base, dir, file + '.expected'));
+          var actual = grunt.file.read(path.join(dest, dir, file));
+
+          test.equal(actual, expected, 'Test ' + dir);
+        });
+      }
+    });
 
     test.done();
-  },
-  custom_options: function(test) {
-    test.expect(1);
-
-    var actual = grunt.file.read('tmp/custom_options');
-    var expected = grunt.file.read('test/expected/custom_options');
-    test.equal(actual, expected, 'should describe what the custom option(s) behavior is.');
-
-    test.done();
-  },
+  }
 };
