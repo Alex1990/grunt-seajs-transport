@@ -115,6 +115,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**2014-09-23** `0.1.3`
+
+Fix the git url in `package.json` because of the stupid `grunt-ini`.
+
 **2014-09-23** `0.1.2`
 
 Add travis ci.
