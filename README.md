@@ -1,6 +1,6 @@
 # grunt-seajs-transport
 
-> Extract the ids and dependencies of the cmd module, an
+> Extract the id and dependencies of a CMD module and convert it to a Transport module.
 
 ## Getting Started
 This plugin requires Grunt `~0.4.1`
@@ -37,48 +37,76 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
+#### options.id
+Type: `Boolean`
+Default value: `true`
+
+Whether to extract the id of the module (use filename, eg: foo.js => foo).
+
+#### options.deps
+Type: `Boolean`
+Default value: `true`
+
+Whether to extract the depedencies of the module.
+
+#### options.idPrefix
 Type: `String`
-Default value: `',  '`
+Default value: `''`
 
-A string value that is used to do something with whatever.
+Append a prefix to the id of the module.
 
-#### options.punctuation
+#### options.quoteChar
 Type: `String`
-Default value: `'.'`
+Default value: `"`
 
-A string value that is used to do something else with whatever else.
+The quotation wrapping the id and dependency.
+
+#### options.space
+Type: `Boolean`
+Default value: `true`
+
+The space after the `,` in the arguments of the `define` function.
 
 ### Usage Examples
 
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+#### Basic
 
 ```js
 grunt.initConfig({
   seajs_transport: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
+    some_name: {
+      options: {},
+      files: [{
+        expand: true,
+        cwd: 'action',
+        src: '**/*.js',
+        dest: 'min/action'
+      }]
+    }
+  }
 });
 ```
 
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+#### Transport the minified file
+
+This grunt plugin can transport the minified file. 
+Besides, if you omit the `dest` property of the `files` object, 
+the transported file will override the source file.
 
 ```js
 grunt.initConfig({
   seajs_transport: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
+    some_name: {
+      options: {
+        space: false
+      },
+      files: [{
+        expand: true,
+        cwd: 'min/action',
+        src: '**/*.js'
+      }]
+    }
+  }
 });
 ```
 
@@ -86,4 +114,7 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+
+**2014-09-23** `0.1.0`
+
+The first version.

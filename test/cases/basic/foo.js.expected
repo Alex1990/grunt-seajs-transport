@@ -1,4 +1,4 @@
-define('foo', ['$', 'base'], function(require, exports, module) {
+define('foo', ['$', 'base'], function (require, exports, module) {
     var $ = require('$'),
         base = require('base');
 

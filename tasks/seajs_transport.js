@@ -14,7 +14,7 @@ module.exports = function(grunt) {
   // creation: http://gruntjs.com/creating-tasks
 
   var path = require('path');
-  var parseDependencies = require('searequire');
+  // var parseDependencies = require('searequire');
 
   grunt.registerMultiTask('seajs_transport', 'Extract the ids and dependencies of the cmd module.', function() {
 
@@ -23,14 +23,17 @@ module.exports = function(grunt) {
       id: true, // Whether to extract the module id (use filename, eg: foo.js => foo)
       deps: true, // Whether to extract the module dependencies
       idPrefix: '', // The prefix of module id
-      asyncMod: false, // Whether to extract the async module which is loaded with `require.async('moduleId', function(`
-      quoteChar: '"' // The wrapper quotes
+      quoteChar: '"', // The wrapper quotes
+      space: true // The space after ',' in the arguments of the `define` function
     });
+
+    var SLASH_RE = /\\\\/g;
+    var CMD_RE = /define\(\s*?function\s*?\(\s*?([\w-$]+?)[, \)]/;
 
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
 
-      // Concat specified files.
+      // Handle specified files.
       f.src.filter(function(filepath) {
 
         // Warn on and remove invalid source files (if nonull was set).
@@ -44,33 +47,45 @@ module.exports = function(grunt) {
       .forEach(function(filepath) {
         var file = grunt.file.read(filepath);
 
+        // If the file isn't a CMD module, then skip
+        if (!CMD_RE.test(file)) {
+          return;
+        }
+
+        var key = CMD_RE.exec(file);
+
+        // https://github.com/seajs/seajs/blob/2.3.0/src/util-deps.js#L6
+        var requireRe = new RegExp('"(?:\\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\'|\\\/\\*[\\S\\s]*?\\*\\/|\\/(?:\\\\\\/|[^\\/\\r\\n])+\\/(?=[^\\/])|\\/\\/.*|\\.\\s*' + key[1] + '|(?:^|[^$])\\b' + key[1] + '\\s*\\(\\s*(["\'])(.+?)\\1\\s*\\)', 'g');
+        var deps = unique(parseDependencies(file, requireRe));
+
         // Parse the dependencies of the module file
-        var depMetas = parseDependencies(file, options.asyncMod);
+        // var depMetas = parseDependencies(file, options.asyncMod);
 
         // Extract the dependencies to a array
-        var deps = depMetas.map(function(v) {
-          var lIndex = v.string.indexOf("'");
-          var rIndex = v.string.lastIndexOf("'");
+        // var deps = unique(depMetas.map(function(v) {
+        //   v = v.string;
+        //   return v.split(/['"]/)[1];
+        // }));
 
-          return v.string.slice(lIndex + 1, rIndex);
-        });
-
-        deps = unique(deps);
-
+        // Shorthand
         var ch = options.quoteChar;
-        deps = options.deps ? '[' + ch + deps.join(ch + ', ' + ch) + ch + '], ' : '';
+        var s = options.space ? ' ' : '';
+
+        // Convert the deps array to string form
+        deps = options.deps ? '[' + ch + deps.join(ch + ',' + s + ch) + ch + '],' + s : '';
 
         // `$'` represents the portion of the followed by the matched substring
-        deps.replace(/\$/g, '$$');
+        deps = deps.replace(/\$/g, '$$$$');
 
-        var id = options.id ? ch + options.idPrefix + filename(filepath) + ch + ', ' : '';
+        var id = options.id ? ch + options.idPrefix + filename(filepath) + ch + ',' + s : '';
 
-        var dest = f.dest || f.src;
-        var destFile = file.replace('define(function(', 'define(' + id + deps + 'function(');
+        // If you didn't specify the `dest` property, the file will override the source file.
+        var dest = f.orig.dest ? f.dest : path.join(f.orig.cwd, f.dest);
+        var destFile = file.replace(/define\(.*?function(\s*)\(/, 'define(' + id + deps + 'function$1(');
 
         grunt.file.write(dest, destFile);
 
-        grunt.log.writeln('File "' + filepath + '" transported.');
+        grunt.log.writeln('File "' + filepath + '" is transported.');
       });
     });
 
@@ -88,6 +103,20 @@ module.exports = function(grunt) {
       });
 
       return Object.keys(o);
+    }
+
+    // https://github.com/seajs/seajs/blob/2.3.0/src/util-deps.js
+    function parseDependencies(code, requireRe) {
+      var res = [];
+
+      code.replace(SLASH_RE, '')
+          .replace(requireRe, function(m, s1, s2) {
+            if (s2) {
+              res.push(s2);
+            }
+          });
+
+      return res;
     }
 
     // Not used

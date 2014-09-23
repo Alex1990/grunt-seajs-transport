@@ -26,15 +26,13 @@
   "scripts": {
     "test": "grunt test"
   },
-  "dependencies": {
-    "searequire": "^1.5.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4.5",
-    "grunt-contrib-clean": "^0.5.0",
+    "grunt-contrib-clean": "^0.6.0",
     "grunt-contrib-jshint": "^0.9.2",
     "grunt-contrib-nodeunit": "^0.3.3",
-    "grunt-debug-task": "^0.1.5"
+    "grunt-contrib-uglify": "0.6.0"
   },
   "peerDependencies": {
     "grunt": "~0.4.1"
