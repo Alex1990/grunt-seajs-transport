@@ -117,7 +117,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 **2014-09-23** `0.1.3`
 
-Fix the git url in `package.json` because of the stupid `grunt-ini`.
+Fix the git url in `package.json` because of the stupid `grunt-init`.
 
 **2014-09-23** `0.1.2`
 
