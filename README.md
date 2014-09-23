@@ -1,4 +1,4 @@
-# grunt-seajs-transport
+# grunt-seajs-transport [![Build Status](https://travis-ci.org/Alex1990/grunt-seajs-transport.svg)](https://travis-ci.org/Alex1990/grunt-seajs-transport)
 
 > Extract the id and dependencies of a CMD module and convert it to a Transport module.
 
@@ -114,6 +114,10 @@ grunt.initConfig({
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+
+**2014-09-23** `0.1.2`
+
+Add travis ci.
 
 **2014-09-23** `0.1.1`
 
