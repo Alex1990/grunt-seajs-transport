@@ -115,6 +115,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**2014-09-23** `0.1.1`
+
+Publish a npm package.
+
 **2014-09-23** `0.1.0`
 
 The first version.
