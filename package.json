@@ -1,7 +1,7 @@
 {
   "name": "grunt-seajs-transport",
   "description": "Extract the ids and dependencies of the cmd module.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/alexchao/grunt-seajs-transport",
   "author": {
     "name": "Alex Chao",
