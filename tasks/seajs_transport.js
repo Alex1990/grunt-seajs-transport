@@ -30,6 +30,9 @@ module.exports = function(grunt) {
     var SLASH_RE = /\\\\/g;
     var CMD_RE = /define\(\s*?function\s*?\(\s*?([\w-$]+?)[, \)]/;
 
+    // Calculate the number of all transported files
+    var total = 0;
+
     // Iterate over all specified file groups.
     this.files.forEach(function(f) {
 
@@ -86,8 +89,11 @@ module.exports = function(grunt) {
         grunt.file.write(dest, destFile);
 
         grunt.log.writeln('File "' + filepath + '" is transported.');
+        total++;
       });
     });
+
+    grunt.log.writeln(total + ' files are transported.');
 
     // Get the filename (excluding extname)
     function filename(filepath) {
