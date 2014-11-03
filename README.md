@@ -115,6 +115,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**2014-11-03** `0.1.4`
+
+Display the number of the handled files in output log.
+
 **2014-09-23** `0.1.3`
 
 Fix the git url in `package.json` because of the stupid `grunt-init`.
