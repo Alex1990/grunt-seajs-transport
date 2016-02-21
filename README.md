@@ -115,6 +115,11 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+**2016-02-21** `0.1.5`
+
+- Update for Grunt 1.0.
+- Fix a minified test bug.
+
 **2014-11-03** `0.1.4`
 
 Display the number of the handled files in output log.
