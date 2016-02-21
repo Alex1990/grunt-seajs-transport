@@ -1,1 +1,1 @@
-define("minified",["jQuery","jQuery.UI"],function(a){{var b=a("jQuery");a("jQuery.UI")}b.fn.slider=function(){alert("slider")}});
+define("minified",["jQuery","jQuery.UI"],function(a,b,c){var d=a("jQuery");a("jQuery.UI");d.fn.slider=function(){alert("slider")}});

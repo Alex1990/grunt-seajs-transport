@@ -35,7 +35,7 @@ exports.seajs_transport = {
         var expected = grunt.file.read(filepath + '.expected');
         var actual = grunt.file.read(path.join(dest, subdir, filename));
 
-        test.equal(actual, expected, 'Test ' + subdir + filename);
+        test.equal(actual, expected, 'Test ' + subdir + ' ' + filename);
       }
     });
 
